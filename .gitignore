@@ -1,0 +1,30 @@
+# --- Carpetas de Visual Studio y Caché ---
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- Carpetas de Compilación (Binarios) ---
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# --- Paquetes y Dependencias de Terceros ---
+# Si usan NuGet (lo normal en C#), los paquetes se restauran solos
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Si en el futuro agregan un frontend con Node.js / React
+node_modules/
+dist/
+
+# --- Archivos de Configuración Local y Secretos ---
+# Para que no se filtren contraseñas de Base de Datos o Tokens
+appsettings.Development.json
+*.env
+*.env.local
