@@ -3,7 +3,6 @@
 namespace EcommerceImportados.Models
 {
 
-    //hola
     public class Usuario
     {
         public int Id { get; set; }
