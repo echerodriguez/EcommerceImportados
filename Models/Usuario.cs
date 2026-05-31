@@ -28,6 +28,6 @@ namespace EcommerceImportados.Models
         public string Password { get; set; } = string.Empty;
 
         [Required]
-        public string Rol { get; set; } = "Usuario"; // Valor por defecto
+        public RolUsuario Rol { get; set; } = RolUsuario.RolUsuario; // Valor por defecto
     }
 }
