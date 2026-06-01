@@ -1,4 +1,6 @@
-﻿namespace EcommerceImportados.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace EcommerceImportados.Models
 {
     public class DetallePedido
     {
@@ -14,6 +16,7 @@
 
         public int Cantidad { get; set; }
 
+        [Precision(18, 2)]
         public decimal PrecioUnitario { get; set; }
     }
 }

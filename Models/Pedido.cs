@@ -1,4 +1,6 @@
-﻿namespace EcommerceImportados.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace EcommerceImportados.Models
 {
     public class Pedido
     {
@@ -6,6 +8,7 @@
 
         public DateTime Fecha { get; set; }
 
+        [Precision(18, 2)]
         public decimal Total { get; set; }
 
         public EstadoPedido Estado { get; set; }

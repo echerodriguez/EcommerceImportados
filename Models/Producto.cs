@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceImportados.Models
 {
@@ -17,6 +18,7 @@ namespace EcommerceImportados.Models
         public string SKU { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El precio es obligatorio.")]
+        [Precision(18, 2)]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a cero.")]
         public decimal Precio { get; set; }
 
