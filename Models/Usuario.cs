@@ -29,5 +29,9 @@ namespace EcommerceImportados.Models
 
         [Required]
         public RolUsuario Rol { get; set; } = RolUsuario.RolUsuario; // Valor por defecto
+
+        public ICollection<Pedido> Pedidos { get; set; }= new List<Pedido>();
+
+        public Carrito Carrito { get; set; } = new Carrito();
     }
 }

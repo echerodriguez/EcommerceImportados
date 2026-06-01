@@ -32,5 +32,11 @@ namespace EcommerceImportados.Models
         public int CategoriaId { get; set; }
 
         public Categoria Categoria { get; set; } = null!;
+
+        public ICollection<DetalleCarrito> DetallesCarrito { get; set; }
+            = new List<DetalleCarrito>();
+
+        public ICollection<DetallePedido> DetallesPedido { get; set; } 
+            = new List<DetallePedido>();
     }
 }
