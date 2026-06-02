@@ -21,7 +21,6 @@ packages/
 
 # Si en el futuro agregan un frontend con Node.js / React
 node_modules/
-dist/
 
 # --- Archivos de Configuración Local y Secretos ---
 # Para que no se filtren contraseñas de Base de Datos o Tokens
