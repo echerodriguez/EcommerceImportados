@@ -1,0 +1,19 @@
+﻿@model EcommerceImportados.ViewModels.LoginViewModel
+
+<h2>Login</h2>
+
+<form asp-action="Login" method="post">
+
+    <input asp-for="Email" placeholder="Email" />
+    <span asp-validation-for="Email"></span>
+
+    <input asp-for="Password"
+           type="password"
+           placeholder="Contraseña" />
+    <span asp-validation-for="Password"></span>
+
+    <button type="submit">
+        Ingresar
+    </button>
+
+</form>
