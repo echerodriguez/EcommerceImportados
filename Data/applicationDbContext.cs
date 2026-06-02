@@ -1,4 +1,5 @@
-﻿using EcommerceImportados.Models;
+﻿using EcommerceImportados.Controllers;
+using EcommerceImportados.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceImportados.Data

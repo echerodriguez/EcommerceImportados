@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EcommerceImportados.Models.DetalleCarrito>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecommerce Importados</title>
+    <link rel="stylesheet"
+          href="~/css/style.css">
+</head>
+<body>
+
+    <header>
+
+    </header>
+
+    <section class="Carrito">
+
+        <h2>Mi Carrito</h2>
+
+    </section>
+
+    <h1>Mi Carrito</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Producto.Nombre</td>
+                    <td>$@item.PrecioUnitario</td>
+                    <td>@item.Cantidad</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <footer>
+        <p>© 2026 Ecommerce Importados</p>
+    </footer>
+
+</body>
+</html>
