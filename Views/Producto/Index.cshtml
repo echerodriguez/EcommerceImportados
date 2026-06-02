@@ -1,0 +1,94 @@
+﻿@model IEnumerable<EcommerceImportados.Models.Producto>
+
+@{
+    ViewData["Title"] = "Catálogo de Productos";
+}
+
+<div class="container-fluid my-4 px-4">
+    <div class="row">
+        <aside class="col-md-3 col-lg-2 mb-4">
+            <div class="mb-4">
+                <h6 class="text-uppercase fw-bold text-muted small" style="letter-spacing: 0.05em;">Categoria</h6>
+                @if (ViewBag.Categorias != null)
+                {
+                    foreach (var cat in (IEnumerable<EcommerceImportados.Models.Categoria>)ViewBag.Categorias)
+                    {
+                        <div class="form-check my-2">
+                            <input class="form-check-input rounded-0" type="checkbox" id="cat-@cat.Id" value="@cat.Id">
+                            <label class="form-check-label small text-dark" for="cat-@cat.Id">@cat.Nombre</label>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted small">No hay categorías cargadas.</p>
+                }
+            </div>
+            <hr class="text-muted" />
+        </aside>
+
+        <main class="col-md-9 col-lg-10">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h1 class="fw-bold h2 mb-1">Productos</h1>
+                    <p class="text-muted small d-none d-md-block mb-0">Lista de productos</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small text-nowrap">SORT BY</span>
+                    <select class="form-select form-select-sm border-0 bg-light fw-semibold rounded-0">
+                        <option>Newest</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var producto in Model)
+                    {
+                        <div class="col">
+                            <div class="card h-100 border-0 rounded-0 shadow-sm">
+                                <div class="position-relative overflow-hidden bg-light d-flex align-items-center justify-content-center" style="height: 280px; width: 100%;">
+                                    <span class="position-absolute top-0 start-0 m-3 badge bg-light text-dark rounded-pill px-3 py-1 border" style="z-index: 10;">
+                                        @producto.Categoria?.Nombre
+                                    </span>
+
+                                    @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                                    {
+                                        <img src="@producto.ImagenUrl" alt="@producto.Nombre" class="w-100 h-100" style="object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center text-muted p-4">
+                                            <i class="bi bi-image d-block h1 mb-1"></i>
+                                            <span class="text-uppercase tracking-wider fw-semibold" style="font-size: 0.65rem; letter-spacing: 0.1em;">No Image Available</span>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title text-dark fw-semibold mb-2" style="font-size: 0.9rem; line-height: 1.4;">@producto.Nombre</h5>
+                                        <p class="text-muted small text-truncate mb-0">@producto.Descripcion</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <p class="fw-bold text-dark mb-0">$@producto.Precio.ToString("N2")</p>
+                                        <button class="btn btn-sm btn-dark rounded-0 text-uppercase px-2" style="font-size: 0.75rem;">+ Carrito</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center my-5">
+                        <p class="text-muted">No se encontraron productos en esta sección.</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+</div>

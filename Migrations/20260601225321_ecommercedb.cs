@@ -5,7 +5,7 @@
 namespace EcommerceImportados.Migrations
 {
     /// <inheritdoc />
-    public partial class EcommerceDB : Migration
+    public partial class ecommercedb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

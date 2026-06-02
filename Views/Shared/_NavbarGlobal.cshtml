@@ -1,0 +1,22 @@
+﻿<!-- Views/Shared/_NavbarGlobal.cshtml -->
+<header class="border-bottom bg-white sticky-top">
+    <div class="container-fluid px-4 py-3 d-flex align-items-center justify-content-between">
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold text-dark text-uppercase tracking-wider m-0 h4" asp-controller="Home" asp-action="Index">
+            Global Imports
+        </a>
+
+        <!-- NAVBAR -->
+        <nav class="d-flex gap-4">
+            <a asp-controller="Home" asp-action="Index" class="text-dark text-decoration-none small fw-semibold">Inicio</a>
+            <a asp-controller="Producto" asp-action="Index" class="text-dark text-decoration-none small fw-semibold border-bottom border-dark pb-1">Productos</a>
+            <a asp-controller="Carrito" asp-action="Index" class="text-muted text-decoration-none small fw-semibold">Carrito</a>
+        </nav>
+
+        <!-- Admin  -->
+        <div class="d-flex align-items-center">
+            <a asp-controller="Categorias" asp-action="Index" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Cat</a>
+            <a asp-controller="Producto" asp-action="Admin" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Prod</a>
+        </div>
+    </div>
+</header>

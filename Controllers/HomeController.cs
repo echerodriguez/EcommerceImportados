@@ -1,14 +1,32 @@
+using EcommerceImportados.Data;
 using EcommerceImportados.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace EcommerceImportados.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        // 1. Declaramos el objeto privado del contexto
+        private readonly ApplicationDbContext _context;
+
+        // 2. Lo recibimos por el constructor mediante Inyección de Dependencias
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        // 3. Modificamos el Index para que sea asíncrono y cargue los datos
+        public async Task<IActionResult> Index()
+        {
+            // Cargamos las categorías para los filtros del panel lateral
+            ViewBag.Categorias = await _context.Categorias.ToListAsync();
+
+            // Cargamos los productos para la grilla principal
+            var productos = await _context.Productos.ToListAsync();
+
+            return View(productos);
         }
 
         public IActionResult Privacy()

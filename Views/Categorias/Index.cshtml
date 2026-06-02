@@ -1,0 +1,123 @@
+﻿@model IEnumerable<EcommerceImportados.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Panel de Categorías";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold h3 text-dark">Administración de Categorías</h1>
+            <p class="text-muted small">Creá, editá o eliminá las categorías visibles en el catálogo.</p>
+        </div>
+        <button type="button" class="btn btn-dark rounded-0 text-uppercase fw-bold px-4 btn-sm" data-bs-toggle="modal" data-bs-target="#createModal">
+            Nueva Categoría
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr class="text-uppercase text-muted small" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                        <th class="ps-4">ID</th>
+                        <th>Nombre de la Categoría</th>
+                        <th class="text-end pe-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-muted">#@item.Id</td>
+                                <td class="fw-semibold text-dark">@item.Nombre</td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-outline-secondary rounded-0 me-2" data-bs-toggle="modal" data-bs-target="#editModal-@item.Id">
+                                        Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="editModal-@item.Id" database-bs-backdrop="static" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-0 border-0 shadow">
+                                        <form asp-action="Edit" asp-route-id="@item.Id" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="Id" value="@item.Id" />
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="modal-title fw-bold">Editar Categoría</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body py-3">
+                                                <label class="form-label small fw-semibold text-muted text-uppercase">Nombre</label>
+                                                <input type="text" name="Nombre" class="form-control rounded-0" value="@item.Nombre" required />
+                                            </div>
+                                            <div class="modal-footer border-0 pt-0">
+                                                <button type="button" class="btn btn-sm btn-light rounded-0" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-sm btn-dark rounded-0 px-3">Guardar Cambios</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-0 border-0 shadow">
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="modal-title fw-bold text-danger">¿Eliminar Categoría?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body py-3">
+                                                <p class="mb-0">¿Estás seguro de que querés borrar <strong>@item.Nombre</strong>? Esta acción no se puede deshacer.</p>
+                                            </div>
+                                            <div class="modal-footer border-0 pt-0">
+                                                <button type="button" class="btn btn-sm btn-light rounded-0" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-sm btn-danger rounded-0 px-3">Eliminar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted small">No hay categorías creadas todavía.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createModal" database-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-0 border-0 shadow">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Nueva Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <label class="form-label small fw-semibold text-muted text-uppercase">Nombre de la Categoría</label>
+                    <input type="text" name="Nombre" class="form-control rounded-0" placeholder="Categoria" required />
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light rounded-0" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-sm btn-dark rounded-0 px-3">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

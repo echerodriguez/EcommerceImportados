@@ -26,14 +26,12 @@ namespace EcommerceImportados.Models
         [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser un número negativo.")]
         public int Stock { get; set; }
 
-        [Required(ErrorMessage = "La URL de la imagen es obligatoria.")]
-        [Url(ErrorMessage = "Debe ser una URL válida.")]
-        public string ImagenUrl { get; set; } = string.Empty;
+        public string? ImagenUrl { get; set; }
 
         [Required(ErrorMessage = "La categoría es obligatoria.")]
         public int CategoriaId { get; set; }
 
-        public Categoria Categoria { get; set; } = null!;
+        public Categoria? Categoria { get; set; }
 
         public ICollection<DetalleCarrito> DetallesCarrito { get; set; }
             = new List<DetalleCarrito>();
