@@ -1,0 +1,26 @@
+﻿@model IEnumerable<EcommerceImportados.Models.Pedido>
+
+<h2>Mis Compras</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Pedido</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var pedido in Model)
+        {
+            <tr>
+                <td>@pedido.Id</td>
+                <td>@pedido.Fecha</td>
+                <td>$@pedido.Total</td>
+                <td>@pedido.Estado</td>
+            </tr>
+        }
+    </tbody>
+</table>
