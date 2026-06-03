@@ -2,6 +2,7 @@
 using EcommerceImportados.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace EcommerceImportados.Controllers
 {
@@ -23,6 +24,7 @@ namespace EcommerceImportados.Controllers
             return View(detalles);
         }
 
+
         public IActionResult Agregar(int productoId)
         {
             var producto = _context.Productos
@@ -33,7 +35,18 @@ namespace EcommerceImportados.Controllers
                 return NotFound();
             }
 
-            int carritoId = 1;
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var carrito = _context.Carritos
+                .FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return NotFound("No se encontró un carrito para este usuario.");
+            }
+
+            int carritoId = carrito.Id;
 
             var detalleExistente = _context.DetallesCarrito
                 .FirstOrDefault(d =>
@@ -43,7 +56,8 @@ namespace EcommerceImportados.Controllers
             if (detalleExistente != null)
             {
                 detalleExistente.Cantidad++;
-                detalleExistente.PrecioUnitario = producto.Precio * detalleExistente.Cantidad;
+                detalleExistente.PrecioUnitario =
+                    producto.Precio * detalleExistente.Cantidad;
             }
             else
             {
@@ -66,7 +80,18 @@ namespace EcommerceImportados.Controllers
         [HttpPost]
         public async Task<IActionResult> FinalizarCompra()
         {
-            int carritoId = 1; // temporal
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var carrito = _context.Carritos
+                .FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return NotFound("No se encontró un carrito para este usuario.");
+            }
+
+            int carritoId = carrito.Id;
 
             var detalles = _context.DetallesCarrito
                 .Include(d => d.Producto)
@@ -82,7 +107,7 @@ namespace EcommerceImportados.Controllers
             {
                 Fecha = DateTime.Now,
                 Estado = EstadoPedido.PendientePago,
-                UsuarioId = 1, // Temporal
+                UsuarioId = usuarioId,
                 Activo = true
             };
 

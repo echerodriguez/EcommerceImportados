@@ -108,6 +108,15 @@ public class AccountController : Controller
 
         await _context.SaveChangesAsync();
 
+        Carrito carrito = new Carrito
+        {
+            UsuarioId = usuario.Id
+        };
+
+        _context.Carritos.Add(carrito);
+
+        await _context.SaveChangesAsync();
+
         return RedirectToAction("Login");
     }
 
