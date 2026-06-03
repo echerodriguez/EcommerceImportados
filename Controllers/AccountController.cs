@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceImportados.Controllers;
 
@@ -32,11 +33,24 @@ public class AccountController : Controller
             return View(model);
 
         Usuario? usuario = _context.Usuarios
-            .FirstOrDefault(u =>
-                u.Email == model.Email &&
-                u.Password == model.Password);
+            .FirstOrDefault(u => u.Email == model.Email);
 
         if (usuario == null)
+        {
+            ModelState.AddModelError("",
+                "Email o contraseña incorrectos");
+
+            return View(model);
+        }
+
+        var passwordHasher = new PasswordHasher<Usuario>();
+
+        var resultado = passwordHasher.VerifyHashedPassword(
+            usuario,
+            usuario.Password,
+            model.Password);
+
+        if (resultado == PasswordVerificationResult.Failed)
         {
             ModelState.AddModelError("",
                 "Email o contraseña incorrectos");
@@ -100,9 +114,14 @@ public class AccountController : Controller
             Nombre = model.Nombre,
             Apellido = model.Apellido,
             Email = model.Email,
-            DNI = model.DNI,
-            Password = model.Password
+            DNI = model.DNI
         };
+
+        var passwordHasher = new PasswordHasher<Usuario>();
+
+        usuario.Password = passwordHasher.HashPassword(
+            usuario,
+            model.Password);
 
         _context.Usuarios.Add(usuario);
 
