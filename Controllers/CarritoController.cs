@@ -62,5 +62,52 @@ namespace EcommerceImportados.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> FinalizarCompra()
+        {
+            int carritoId = 1; // temporal
+
+            var detalles = _context.DetallesCarrito
+                .Include(d => d.Producto)
+                .Where(d => d.CarritoId == carritoId)
+                .ToList();
+
+            if (!detalles.Any())
+            {
+                return RedirectToAction("Index");
+            }
+
+            var pedido = new Pedido
+            {
+                Fecha = DateTime.Now,
+                Estado = EstadoPedido.PendientePago,
+                UsuarioId = 1, // Temporal
+                Activo = true
+            };
+
+            pedido.Total = detalles.Sum(d => d.PrecioUnitario);
+
+            foreach (var detalle in detalles)
+            {
+                pedido.Detalles.Add(
+                    new DetallePedido
+                    {
+                        ProductoId = detalle.ProductoId,
+                        Cantidad = detalle.Cantidad,
+                        PrecioUnitario = detalle.PrecioUnitario
+                    });
+            }
+
+            _context.Pedidos.Add(pedido);
+
+            _context.DetallesCarrito.RemoveRange(detalles);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                "HistorialCompras",
+                "Account");
+        }
     }
 }

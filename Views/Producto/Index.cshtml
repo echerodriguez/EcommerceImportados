@@ -75,7 +75,13 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <p class="fw-bold text-dark mb-0">$@producto.Precio.ToString("N2")</p>
-                                        <button class="btn btn-sm btn-dark rounded-0 text-uppercase px-2" style="font-size: 0.75rem;">+ Carrito</button>
+                                        <a asp-controller="Carrito"
+                                           asp-action="Agregar"
+                                           asp-route-productoId="@producto.Id"
+                                           class="btn btn-sm btn-dark rounded-0 text-uppercase px-2"
+                                           style="font-size: 0.75rem;">
+                                            + Carrito
+                                        </a>
                                     </div>
                                 </div>
                             </div>
