@@ -50,6 +50,33 @@ namespace EcommerceImportados.Controllers
             string vencimiento,
             string cvv)
         {
+            if (numeroTarjeta.Replace(" ", "").Length != 16)
+            {
+                return Json(new
+                {
+                    success = false,
+                    mensaje = "La tarjeta debe tener 16 dígitos."
+                });
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(vencimiento, @"^\d{2}/\d{2}$"))
+            {
+                return Json(new
+                {
+                    success = false,
+                    mensaje = "Formato de vencimiento inválido."
+                });
+            }
+
+            if (cvv.Length != 3)
+            {
+                return Json(new
+                {
+                    success = false,
+                    mensaje = "El CVV debe tener 3 dígitos."
+                });
+            }
+
             int usuarioId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -75,6 +102,7 @@ namespace EcommerceImportados.Controllers
                     mensaje = "El pedido ya fue pagado."
                 });
             }
+
 
             if (string.IsNullOrWhiteSpace(numeroTarjeta) ||
                 string.IsNullOrWhiteSpace(titular) ||

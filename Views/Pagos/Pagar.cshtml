@@ -42,10 +42,22 @@
         <label>Número de tarjeta</label>
         <br />
         <input type="text"
+            id="numeroTarjeta"
                name="numeroTarjeta"
-               maxlength="16"
+               maxlength="19"
                required />
     </div>
+
+    <script>
+        document.getElementById("numeroTarjeta")
+        .addEventListener("input", function(e) {
+            let valor = e.target.value;
+            valor = valor.replace(/\D/g, '');
+            valor = valor.substring(0, 16);
+            valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = valor;
+        });
+    </script>
 
     <br />
 
@@ -63,10 +75,29 @@
         <label>Vencimiento</label>
         <br />
         <input type="text"
+               maxlength="5"
+               id="vencimiento"
                name="vencimiento"
                placeholder="MM/AA"
                required />
     </div>
+
+    <script>
+        document.getElementById("vencimiento")
+        .addEventListener("input", function(e) {
+            let valor = e.target.value;
+            valor = valor.replace(/\D/g, '');
+            valor = valor.substring(0, 4);
+            if (valor.length > 2)
+            {
+                valor =
+                    valor.substring(0,2)
+                    + "/"
+                    + valor.substring(2);
+            }
+            e.target.value = valor;
+        });
+    </script>
 
     <br />
 
@@ -74,10 +105,42 @@
         <label>CVV</label>
         <br />
         <input type="password"
+               id="cvv"
                name="cvv"
-               maxlength="4"
+               maxlength="3"
                required />
+
+        <button type="button"
+                id="toggleCvv">
+            👁
+        </button>
     </div>
+
+    <script>
+        document.getElementById("cvv")
+        .addEventListener("input", function(e) {
+
+            e.target.value =
+                e.target.value
+                    .replace(/\D/g, '')
+                    .substring(0,3);
+        });
+        document.getElementById("toggleCvv")
+        .addEventListener("click", function() {
+
+            const cvv =
+                document.getElementById("cvv");
+
+            if (cvv.type === "password")
+            {
+                cvv.type = "text";
+            }
+            else
+            {
+                cvv.type = "password";
+            }
+        });
+    </script>
 
     <br />
 
