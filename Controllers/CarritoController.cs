@@ -1,11 +1,13 @@
 ﻿using EcommerceImportados.Data;
 using EcommerceImportados.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EcommerceImportados.Controllers
 {
+    [Authorize]
     public class CarritoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -14,16 +16,25 @@ namespace EcommerceImportados.Controllers
         {
             _context = context;
         }
-
+        
         public IActionResult Index()
         {
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var carrito = _context.Carritos.FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return View(new List<DetalleCarrito>());
+            }
+
             var detalles = _context.DetallesCarrito
                 .Include(d => d.Producto)
+                .Where(d => d.CarritoId == carrito.Id)
                 .ToList();
 
             return View(detalles);
         }
-
 
         public IActionResult Agregar(int productoId)
         {
@@ -43,27 +54,35 @@ namespace EcommerceImportados.Controllers
 
             if (carrito == null)
             {
-                return NotFound("No se encontró un carrito para este usuario.");
+                return BadRequest("El usuario no tiene carrito asociado.");
             }
-
-            int carritoId = carrito.Id;
 
             var detalleExistente = _context.DetallesCarrito
                 .FirstOrDefault(d =>
-                    d.CarritoId == carritoId &&
+                    d.CarritoId == carrito.Id &&
                     d.ProductoId == productoId);
 
             if (detalleExistente != null)
             {
+                if (detalleExistente.Cantidad + 1 > producto.Stock)
+                {
+                    TempData["Error"] = "No hay stock suficiente.";
+                    return RedirectToAction("Index");
+                }
+
                 detalleExistente.Cantidad++;
-                detalleExistente.PrecioUnitario =
-                    producto.Precio * detalleExistente.Cantidad;
             }
             else
             {
+                if (producto.Stock <= 0)
+                {
+                    TempData["Error"] = "Producto sin stock.";
+                    return RedirectToAction("Index");
+                }
+
                 var detalle = new DetalleCarrito
                 {
-                    CarritoId = carritoId,
+                    CarritoId = carrito.Id,
                     ProductoId = producto.Id,
                     Cantidad = 1,
                     PrecioUnitario = producto.Precio
@@ -88,19 +107,29 @@ namespace EcommerceImportados.Controllers
 
             if (carrito == null)
             {
-                return NotFound("No se encontró un carrito para este usuario.");
+                return BadRequest("No existe carrito.");
             }
-
-            int carritoId = carrito.Id;
 
             var detalles = _context.DetallesCarrito
                 .Include(d => d.Producto)
-                .Where(d => d.CarritoId == carritoId)
+                .Where(d => d.CarritoId == carrito.Id)
                 .ToList();
 
             if (!detalles.Any())
             {
+                TempData["Error"] = "El carrito está vacío.";
                 return RedirectToAction("Index");
+            }
+
+            foreach (var detalle in detalles)
+            {
+                if (detalle.Cantidad > detalle.Producto.Stock)
+                {
+                    TempData["Error"] =
+                        $"No hay stock suficiente para {detalle.Producto.Nombre}";
+
+                    return RedirectToAction("Index");
+                }
             }
 
             var pedido = new Pedido
@@ -111,7 +140,8 @@ namespace EcommerceImportados.Controllers
                 Activo = true
             };
 
-            pedido.Total = detalles.Sum(d => d.PrecioUnitario);
+            pedido.Total = detalles.Sum(d =>
+                d.PrecioUnitario * d.Cantidad);
 
             foreach (var detalle in detalles)
             {
@@ -122,6 +152,8 @@ namespace EcommerceImportados.Controllers
                         Cantidad = detalle.Cantidad,
                         PrecioUnitario = detalle.PrecioUnitario
                     });
+
+                detalle.Producto.Stock -= detalle.Cantidad;
             }
 
             _context.Pedidos.Add(pedido);
@@ -131,8 +163,114 @@ namespace EcommerceImportados.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(
-                "HistorialCompras",
-                "Account");
+                "Pagar",
+                "Pagos",
+                new { pedidoId = pedido.Id });
+        }
+
+        [HttpPost]
+        public IActionResult IncrementarCantidad(int productoId)
+        {
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var carrito = _context.Carritos
+                .FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return BadRequest();
+            }
+
+            var detalle = _context.DetallesCarrito
+                .Include(d => d.Producto)
+                .FirstOrDefault(d =>
+                    d.CarritoId == carrito.Id &&
+                    d.ProductoId == productoId);
+
+            if (detalle == null)
+            {
+                return NotFound();
+            }
+
+            if (detalle.Cantidad + 1 > detalle.Producto.Stock)
+            {
+                TempData["Error"] = "No hay stock suficiente.";
+                return RedirectToAction("Index");
+            }
+
+            detalle.Cantidad++;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult DisminuirCantidad(int productoId)
+        {
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var carrito = _context.Carritos
+                .FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return BadRequest();
+            }
+
+            var detalle = _context.DetallesCarrito
+                .FirstOrDefault(d =>
+                    d.CarritoId == carrito.Id &&
+                    d.ProductoId == productoId);
+
+            if (detalle == null)
+            {
+                return NotFound();
+            }
+
+            detalle.Cantidad--;
+
+            if (detalle.Cantidad <= 0)
+            {
+                _context.DetallesCarrito.Remove(detalle);
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult EliminarProducto(int productoId)
+        {
+            int usuarioId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var carrito = _context.Carritos
+                .FirstOrDefault(c => c.UsuarioId == usuarioId);
+
+            if (carrito == null)
+            {
+                return BadRequest();
+            }
+
+            var detalle = _context.DetallesCarrito
+                .FirstOrDefault(d =>
+                    d.CarritoId == carrito.Id &&
+                    d.ProductoId == productoId);
+
+            if (detalle == null)
+            {
+                return NotFound();
+            }
+
+            _context.DetallesCarrito.Remove(detalle);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

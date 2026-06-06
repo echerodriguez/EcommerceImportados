@@ -1,0 +1,125 @@
+﻿@model EcommerceImportados.Models.Pedido
+
+<h1>Pasarela de Pago</h1>
+
+<hr />
+
+<h3>Pedido #@Model.Id</h3>
+
+<p>
+    <strong>Total:</strong>
+    $@Model.Total
+</p>
+
+<form id="formPago">
+
+    <input type="hidden"
+           name="pedidoId"
+           value="@Model.Id" />
+
+    <div>
+        <label>
+            <input type="radio"
+                   name="metodoPago"
+                   value="Debito"
+                   checked />
+
+            Tarjeta Débito
+        </label>
+
+        <label>
+            <input type="radio"
+                   name="metodoPago"
+                   value="Credito" />
+
+            Tarjeta Crédito
+        </label>
+    </div>
+
+    <br />
+
+    <div>
+        <label>Número de tarjeta</label>
+        <br />
+        <input type="text"
+               name="numeroTarjeta"
+               maxlength="16"
+               required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Titular</label>
+        <br />
+        <input type="text"
+               name="titular"
+               required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Vencimiento</label>
+        <br />
+        <input type="text"
+               name="vencimiento"
+               placeholder="MM/AA"
+               required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>CVV</label>
+        <br />
+        <input type="password"
+               name="cvv"
+               maxlength="4"
+               required />
+    </div>
+
+    <br />
+
+    <button type="submit">
+        Confirmar Pago
+    </button>
+
+</form>
+
+<script>
+    document.getElementById("formPago")
+        .addEventListener("submit", async function (e) {
+
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            try {
+
+                const response = await fetch(
+                    "/Pagos/ConfirmarPago",
+                    {
+                        method: "POST",
+                        body: formData
+                    });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+
+                    alert(resultado.mensaje);
+
+                    window.location.href = "/Home/Index";
+                }
+                else {
+
+                    alert(resultado.mensaje);
+                }
+
+            } catch (error) {
+
+                alert("Ocurrió un error al procesar el pago.");
+            }
+        });
+</script>

@@ -1,57 +1,100 @@
 ﻿@model IEnumerable<EcommerceImportados.Models.DetalleCarrito>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Ecommerce Importados</title>
-    <link rel="stylesheet"
-          href="~/css/style.css">
-</head>
-<body>
+@{
+    decimal total = 0;
+}
 
-    <header>
+<h1>Mi Carrito</h1>
 
-    </header>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Producto</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-    <section class="Carrito">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            decimal subtotal = item.PrecioUnitario * item.Cantidad;
+            total += subtotal;
 
-        <h2>Mi Carrito</h2>
-
-    </section>
-
-    <h1>Mi Carrito</h1>
-
-    <table>
-        <thead>
             <tr>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
+                <td>
+                    <img src="@item.Producto.ImagenUrl"
+                         alt="@item.Producto.Nombre"
+                         width="100" />
+                </td>
+
+                <td>
+                    @item.Producto.Nombre
+                </td>
+
+                <td>
+                    $@item.PrecioUnitario
+                </td>
+
+                <td>
+
+                    <form asp-action="DisminuirCantidad"
+                          method="post"
+                          style="display:inline;">
+
+                        <input type="hidden"
+                               name="productoId"
+                               value="@item.ProductoId" />
+
+                        <button type="submit">-</button>
+
+                    </form>
+
+                    <span style="margin:0 10px;">
+                        @item.Cantidad
+                    </span>
+
+                    <form asp-action="IncrementarCantidad"
+                          method="post"
+                          style="display:inline;">
+
+                        <input type="hidden"
+                               name="productoId"
+                               value="@item.ProductoId" />
+
+                        <button type="submit">+</button>
+
+                    </form>
+
+                </td>
+
+                <td>
+                    $@subtotal
+                </td>
+                <td>
+                    <form asp-action="EliminarProducto" method="post">
+                        <input type="hidden"
+                               name="productoId"
+                               value="@item.ProductoId" />
+                        <button type="submit">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
             </tr>
-        </thead>
+        }
+    </tbody>
+</table>
 
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Producto.Nombre</td>
-                    <td>$@item.PrecioUnitario</td>
-                    <td>@item.Cantidad</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<hr />
 
-    <form asp-action="FinalizarCompra" method="post">
-        <button type="submit">
-            Finalizar Compra
-        </button>
-    </form>
+<h3>Total: $@total</h3>
 
-    <footer>
-        <p>© 2026 Ecommerce Importados</p>
-    </footer>
-
-</body>
-</html>
+<form asp-action="FinalizarCompra" method="post">
+    <button type="submit">
+        Finalizar Compra
+    </button>
+</form>
