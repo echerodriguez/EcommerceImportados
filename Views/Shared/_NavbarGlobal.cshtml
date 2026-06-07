@@ -3,8 +3,9 @@
 @inject EcommerceImportados.Data.ApplicationDbContext DbContext
 @{
     int cantidadCarrito = 0;
-    if (User.Identity != null &&
-        User.Identity.IsAuthenticated)
+    bool isAuthenticated = User.Identity != null &&
+        User.Identity.IsAuthenticated;
+    if (isAuthenticated)
     {
         var claim =
             User.FindFirst(ClaimTypes.NameIdentifier);
@@ -44,7 +45,18 @@
 
         <!-- Admin  -->
         <div class="d-flex align-items-center">
-            <a asp-controller="Carrito" asp-action="Index" class="carrito-link">🛒<span id="contadorCarrito">@cantidadCarrito </span></a>
+            @if (isAuthenticated)
+            {
+                <a asp-controller="Carrito"
+                   asp-action="Index"
+                   class="carrito-link">
+                    🛒<span id="contadorCarrito">@cantidadCarrito</span>
+                </a>
+            }
+            else
+            {
+                <a href="#"class="carrito-link"onclick="alert('Debe iniciar sesión para ver su carrito.');window.location.href='/Account/Login';return false;">🛒<span id="contadorCarrito">0</span></a>
+            }
             <a asp-controller="Categorias" asp-action="Index" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Cat</a>
             <a asp-controller="Producto" asp-action="Admin" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Prod</a>
         </div>

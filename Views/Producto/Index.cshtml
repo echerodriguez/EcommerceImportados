@@ -124,6 +124,9 @@
                     else
                     {
                         alert(resultado.mensaje);
+                        if (resultado.requiereLogin) {
+                            window.location.href = "/Account/Login";
+                        }
                     }
                 } catch {
                     alert("Error al agregar al carrito.");

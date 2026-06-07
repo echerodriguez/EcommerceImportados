@@ -1,13 +1,13 @@
 ﻿using EcommerceImportados.Data;
 using EcommerceImportados.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EcommerceImportados.Controllers
 {
-    [Authorize]
     public class CarritoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,9 +16,20 @@ namespace EcommerceImportados.Controllers
         {
             _context = context;
         }
-        
+
+
         public IActionResult Index()
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                TempData["Error"] =
+                    "Debe iniciar sesión para ver su carrito.";
+
+                return RedirectToAction(
+                    "Login",
+                    "Account");
+            }
+
             int usuarioId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var carrito = _context.Carritos.FirstOrDefault(c => c.UsuarioId == usuarioId);
@@ -38,6 +49,16 @@ namespace EcommerceImportados.Controllers
 
         public IActionResult Agregar(int productoId)
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    requiereLogin = true,
+                    mensaje = "Debe iniciar sesión para agregar productos al carrito."
+                });
+            }
+
             var producto = _context.Productos
                 .FirstOrDefault(p => p.Id == productoId);
 
@@ -58,14 +79,11 @@ namespace EcommerceImportados.Controllers
 
             if (carrito == null)
             {
-                if (carrito == null)
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        success = false,
-                        mensaje = "El usuario no tiene carrito asociado."
-                    });
-                }
+                    success = false,
+                    mensaje = "El usuario no tiene carrito asociado."
+                });
             }
 
             var detalleExistente = _context.DetallesCarrito
@@ -121,6 +139,7 @@ namespace EcommerceImportados.Controllers
             });
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> FinalizarCompra()
         {
@@ -193,6 +212,7 @@ namespace EcommerceImportados.Controllers
                 new { pedidoId = pedido.Id });
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult IncrementarCantidad(int productoId)
         {
@@ -231,6 +251,7 @@ namespace EcommerceImportados.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult DisminuirCantidad(int productoId)
         {
@@ -267,6 +288,7 @@ namespace EcommerceImportados.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult EliminarProducto(int productoId)
         {
