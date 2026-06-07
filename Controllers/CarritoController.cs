@@ -43,7 +43,11 @@ namespace EcommerceImportados.Controllers
 
             if (producto == null)
             {
-                return NotFound();
+                return Json(new
+                {
+                    success = false,
+                    mensaje = "Producto no encontrado."
+                });
             }
 
             int usuarioId = int.Parse(
@@ -54,7 +58,14 @@ namespace EcommerceImportados.Controllers
 
             if (carrito == null)
             {
-                return BadRequest("El usuario no tiene carrito asociado.");
+                if (carrito == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        mensaje = "El usuario no tiene carrito asociado."
+                    });
+                }
             }
 
             var detalleExistente = _context.DetallesCarrito
@@ -66,8 +77,11 @@ namespace EcommerceImportados.Controllers
             {
                 if (detalleExistente.Cantidad + 1 > producto.Stock)
                 {
-                    TempData["Error"] = "No hay stock suficiente.";
-                    return RedirectToAction("Index");
+                    return Json(new
+                    {
+                        success = false,
+                        mensaje = "No hay stock suficiente."
+                    });
                 }
 
                 detalleExistente.Cantidad++;
@@ -76,8 +90,11 @@ namespace EcommerceImportados.Controllers
             {
                 if (producto.Stock <= 0)
                 {
-                    TempData["Error"] = "Producto sin stock.";
-                    return RedirectToAction("Index");
+                    return Json(new
+                    {
+                        success = false,
+                        mensaje = "Producto sin stock."
+                    });
                 }
 
                 var detalle = new DetalleCarrito
@@ -93,7 +110,15 @@ namespace EcommerceImportados.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            int cantidadTotal = _context.DetallesCarrito
+                .Where(d => d.CarritoId == carrito.Id)
+                .Sum(d => d.Cantidad);
+
+            return Json(new
+            {
+                success = true,
+                cantidad = cantidadTotal
+            });
         }
 
         [HttpPost]
