@@ -32,7 +32,8 @@ namespace EcommerceImportados.Controllers
 
             int usuarioId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var carrito = _context.Carritos.FirstOrDefault(c => c.UsuarioId == usuarioId);
+            var carrito = _context.Carritos.
+                FirstOrDefault(c => c.UsuarioId == usuarioId);
 
             if (carrito == null)
             {

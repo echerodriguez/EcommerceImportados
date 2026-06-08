@@ -1,100 +1,143 @@
 ﻿@model IEnumerable<EcommerceImportados.Models.DetalleCarrito>
+<link rel="stylesheet" href="~/css/carrito.css" />
 
 @{
-    decimal total = 0;
+    decimal subtotalGeneral = Model.Sum(x =>
+        x.PrecioUnitario * x.Cantidad);
+    decimal envio = 0; //subtotalGeneral > 0 ? 5000 : 0; Por si es necesario aumentarlo
+    decimal total = subtotalGeneral + envio;
 }
 
-<h1>Mi Carrito</h1>
+<partial name="_CheckoutSteps" model='"Carrito"' />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Producto</th>
-            <th>Precio Unitario</th>
-            <th>Cantidad</th>
-            <th>Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+<div class="carrito-container">
 
-    <tbody>
+    <div class="carrito-productos">
+
+        <h2>Mi Carrito</h2>
+
+        @if (!Model.Any())
+        {
+            <p>Tu carrito está vacío.</p>
+        }
+
         @foreach (var item in Model)
         {
-            decimal subtotal = item.PrecioUnitario * item.Cantidad;
-            total += subtotal;
+            decimal itemSubtotal =
+            item.PrecioUnitario * item.Cantidad;
 
-            <tr>
-                <td>
+            <div class="producto-card">
+
+                <div class="producto-imagen">
                     <img src="@item.Producto.ImagenUrl"
-                         alt="@item.Producto.Nombre"
-                         width="100" />
-                </td>
+                         alt="@item.Producto.Nombre" />
+                </div>
 
-                <td>
-                    @item.Producto.Nombre
-                </td>
+                <div class="producto-info">
 
-                <td>
-                    $@item.PrecioUnitario
-                </td>
+                    <h4>@item.Producto.Nombre</h4>
 
-                <td>
+                    <p class="precio-unitario">
+                        Precio unitario:
+                        <strong>$@item.PrecioUnitario</strong>
+                    </p>
 
-                    <form asp-action="DisminuirCantidad"
-                          method="post"
-                          style="display:inline;">
+                    <div class="cantidad-controls">
+
+                        <form asp-action="DisminuirCantidad"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="productoId"
+                                   value="@item.ProductoId" />
+
+                            <button type="submit">
+                                -
+                            </button>
+
+                        </form>
+
+                        <span class="cantidad">
+                            @item.Cantidad
+                        </span>
+
+                        <form asp-action="IncrementarCantidad"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="productoId"
+                                   value="@item.ProductoId" />
+
+                            <button type="submit">
+                                +
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="producto-total">
+
+                    <p>Subtotal</p>
+
+                    <strong>
+                        $@itemSubtotal
+                    </strong>
+
+                    <form asp-action="EliminarProducto"
+                          method="post">
 
                         <input type="hidden"
                                name="productoId"
                                value="@item.ProductoId" />
 
-                        <button type="submit">-</button>
-
-                    </form>
-
-                    <span style="margin:0 10px;">
-                        @item.Cantidad
-                    </span>
-
-                    <form asp-action="IncrementarCantidad"
-                          method="post"
-                          style="display:inline;">
-
-                        <input type="hidden"
-                               name="productoId"
-                               value="@item.ProductoId" />
-
-                        <button type="submit">+</button>
-
-                    </form>
-
-                </td>
-
-                <td>
-                    $@subtotal
-                </td>
-                <td>
-                    <form asp-action="EliminarProducto" method="post">
-                        <input type="hidden"
-                               name="productoId"
-                               value="@item.ProductoId" />
-                        <button type="submit">
+                        <button class="btn-eliminar"
+                                type="submit">
                             Eliminar
                         </button>
+
                     </form>
-                </td>
-            </tr>
+
+                </div>
+
+            </div>
         }
-    </tbody>
-</table>
 
-<hr />
+    </div>
 
-<h3>Total: $@total</h3>
+    <div class="resumen">
 
-<form asp-action="FinalizarCompra" method="post">
-    <button type="submit">
-        Finalizar Compra
-    </button>
-</form>
+        <h3>Resumen</h3>
+
+        <div class="linea">
+            <span>Subtotal</span>
+            <span>$@subtotalGeneral</span>
+        </div>
+
+        <div class="linea">
+            <span>Envío</span>
+            <span>Gratis!</span>
+        </div>
+
+        <hr />
+
+        <div class="linea total">
+            <span>Total</span>
+            <span>$@total</span>
+        </div>
+
+        <form asp-action="FinalizarCompra"
+              method="post">
+
+            <button class="btn-comprar"
+                    type="submit">
+                Continuar compra
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

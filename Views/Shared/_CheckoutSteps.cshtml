@@ -1,0 +1,24 @@
+﻿@model string
+
+<div class="checkout-steps" id="checkout-steps">
+
+    <div class="step @(Model == "Carrito" ? "active" : "")">
+        <div class="step-circle">1</div>
+        <span>Carrito</span>
+    </div>
+
+    <div class="step-line"></div>
+
+    <div class="step @(Model == "Envio" ? "active" : "")">
+        <div class="step-circle">2</div>
+        <span>Envío</span>
+    </div>
+
+    <div class="step-line"></div>
+
+    <div class="step @(Model == "Pago" ? "active" : "")">
+        <div class="step-circle">3</div>
+        <span>Pago</span>
+    </div>
+
+</div>
