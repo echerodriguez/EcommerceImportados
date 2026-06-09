@@ -15,13 +15,36 @@ namespace EcommerceImportados.Controllers
             _context = context;
         }
 
-        // GET: /productos (Vista pública del catálogo)
+        // GET: /productos (vista del catálogo)
         [Route("productos")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] List<int> categorias, [FromQuery] string orden)
         {
+            IActionResult respuesta;
             ViewBag.Categorias = await _context.Categorias.ToListAsync();
-            var productos = await _context.Productos.Include(p => p.Categoria).ToListAsync();
-            return View(productos);
+
+            var query = _context.Productos.Include(p => p.Categoria).AsQueryable();
+
+            if (categorias != null && categorias.Count > 0)
+            {
+                query = query.Where(p => categorias.Contains(p.CategoriaId));
+            }
+
+            if (orden == "menor_mayor")
+            {
+                query = query.OrderBy(p => p.Precio);
+            }
+            else if (orden == "mayor_menor")
+            {
+                query = query.OrderByDescending(p => p.Precio);
+            }
+            else
+            {
+                query = query.OrderByDescending(p => p.Id);
+            }
+
+            respuesta = View(await query.ToListAsync());
+
+            return respuesta;
         }
 
         // GET: Producto/Admin (Panel de control del Administrador)
