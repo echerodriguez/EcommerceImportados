@@ -2,10 +2,9 @@
 {
     public enum EstadoPedido
     {
-
+        PendienteDatosEnvio,
         PendientePago,
         Pagado,
         Cancelado
-
     }
 }
