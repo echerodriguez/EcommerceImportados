@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EcommerceImportados.Data;
+using EcommerceImportados.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EcommerceImportados.Data;
-using EcommerceImportados.Models;
 
 namespace EcommerceImportados.Controllers
 {
@@ -48,6 +49,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // GET: Producto/Admin (Panel de control del Administrador)
+        [Authorize(Roles = "RolAdministrador")]
         public async Task<IActionResult> Admin()
         {
             var productos = await _context.Productos.Include(p => p.Categoria).ToListAsync();
@@ -55,6 +57,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // GET: Producto/Create
+        [Authorize(Roles = "RolAdministrador")]
         public async Task<IActionResult> Create()
         {
             ViewBag.CategoriaId = new SelectList(await _context.Categorias.ToListAsync(), "Id", "Nombre");
@@ -62,6 +65,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Producto/Create
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre,Descripcion,Precio,Stock,ImagenUrl,CategoriaId")] Producto producto)
@@ -88,6 +92,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // GET: Producto/Edit
+        [Authorize(Roles = "RolAdministrador")]
         public async Task<IActionResult> Edit(int? id)
         {
             IActionResult respuesta = NotFound();
@@ -104,6 +109,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Producto/Edit
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,SKU,Precio,Stock,ImagenUrl,CategoriaId")] Producto producto)
@@ -130,6 +136,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Producto/Delete/5
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)

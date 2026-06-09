@@ -62,8 +62,11 @@
             {
                 <a href="#"class="carrito-link"onclick="alert('Debe iniciar sesión para ver su carrito.');window.location.href='/Account/Login';return false;">🛒<span id="contadorCarrito">0</span></a>
             }
+
+            @if (User.IsInRole("RolAdministrador")){          
             <a asp-controller="Categorias" asp-action="Index" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Cat</a>
             <a asp-controller="Producto" asp-action="Admin" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Prod</a>
+            }
         </div>
     </div>
 </header>

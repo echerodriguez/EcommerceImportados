@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using EcommerceImportados.Data;
+﻿using EcommerceImportados.Data;
 using EcommerceImportados.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceImportados.Controllers
 {
@@ -15,6 +16,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // GET: Categorias (Panel CRUD Unificado)
+        [Authorize(Roles = "RolAdministrador")]
         public async Task<IActionResult> Index()
         {
             var categorias = await _context.Categorias.ToListAsync();
@@ -22,6 +24,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Categorias/Create
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre")] Categoria categoria)
@@ -35,6 +38,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Categorias/Edit
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre")] Categoria categoria)
@@ -50,6 +54,7 @@ namespace EcommerceImportados.Controllers
         }
 
         // POST: Categorias/Delete
+        [Authorize(Roles = "RolAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
