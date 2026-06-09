@@ -45,6 +45,11 @@
 
         <!-- Admin  -->
         <div class="d-flex align-items-center">
+
+            @if (isAuthenticated){
+                <a asp-controller="Account" asp-action="Logout" class="gi-nav__logout">Cerrar sesión</a>
+            }
+
             @if (isAuthenticated)
             {
                 <a asp-controller="Carrito"
