@@ -145,7 +145,7 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(
             CookieAuthenticationDefaults.AuthenticationScheme);
 
-        return RedirectToAction("Login");
+        return RedirectToAction("Index", "Home");
     }
 
     [Authorize(Roles = "RolAdministrador")]
