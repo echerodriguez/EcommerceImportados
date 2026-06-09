@@ -5,7 +5,7 @@
 }
 
 <div class="container-fluid my-4 px-4">
-    <div class="row">
+    <form id="formFiltros" method="get" action="/productos" class="row">
         <aside class="col-md-3 col-lg-2 mb-4">
             <div class="mb-4">
                 <h6 class="text-uppercase fw-bold text-muted small" style="letter-spacing: 0.05em;">Categoria</h6>
@@ -14,7 +14,10 @@
                     foreach (var cat in (IEnumerable<EcommerceImportados.Models.Categoria>)ViewBag.Categorias)
                     {
                         <div class="form-check my-2">
-                            <input class="form-check-input rounded-0" type="checkbox" id="cat-@cat.Id" value="@cat.Id">
+                            <input class="form-check-input rounded-0" type="checkbox" 
+                                   id="cat-@cat.Id" name="categorias" value="@cat.Id" 
+                                   onchange="document.getElementById('formFiltros').submit();"
+                                   @(Context.Request.Query["categorias"].Contains(cat.Id.ToString()) ? "checked" : "")>
                             <label class="form-check-label small text-dark" for="cat-@cat.Id">@cat.Nombre</label>
                         </div>
                     }
@@ -33,12 +36,14 @@
                     <h1 class="fw-bold h2 mb-1">Productos</h1>
                     <p class="text-muted small d-none d-md-block mb-0">Lista de productos</p>
                 </div>
+ 
                 <div class="d-flex align-items-center gap-2">
-                    <span class="text-muted small text-nowrap">SORT BY</span>
-                    <select class="form-select form-select-sm border-0 bg-light fw-semibold rounded-0">
-                        <option>Newest</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
+                    <span class="text-muted small text-nowrap">Ordenar por</span>
+                    <select name="orden" class="form-select form-select-sm border-0 bg-light fw-semibold rounded-0"
+                            onchange="document.getElementById('formFiltros').submit();">
+                        <option value="nuevos" selected="@(Context.Request.Query["orden"] == "nuevos")">Más Nuevos</option>
+                        <option value="menor_mayor" selected="@(Context.Request.Query["orden"] == "menor_mayor")">Menor Precio</option>
+                        <option value="mayor_menor" selected="@(Context.Request.Query["orden"] == "mayor_menor")">Mayor Precio</option>
                     </select>
                 </div>
             </div>
@@ -79,9 +84,7 @@
                                                 class="btn btn-sm btn-dark rounded-0 text-uppercase px-2 btnAgregarCarrito"
                                                 data-productoid="@producto.Id"
                                                 style="font-size: 0.75rem;">
-
                                             + Carrito
-
                                         </button>
                                     </div>
                                 </div>
@@ -97,7 +100,7 @@
                 }
             </div>
         </main>
-    </div>
+    </form>
 </div>
 
 @section Scripts {
@@ -106,20 +109,13 @@
         .querySelectorAll(".btnAgregarCarrito")
         .forEach(boton => {
             boton.addEventListener("click", async function () {
-                const productoId =
-                    this.dataset.productoid;
+                const productoId = this.dataset.productoid;
                 try {
-                    const response =
-                        await fetch(
-                            `/Carrito/Agregar?productoId=${productoId}`
-                        );
-                    const resultado =
-                        await response.json();
+                    const response = await fetch(`/Carrito/Agregar?productoId=${productoId}`);
+                    const resultado = await response.json();
                     if (resultado.success)
                     {
-                        document
-                            .getElementById("contadorCarrito")
-                            .innerText = resultado.cantidad;
+                        document.getElementById("contadorCarrito").innerText = resultado.cantidad;
                     }
                     else
                     {
@@ -134,5 +130,4 @@
             });
         });
     </script>
-
 }

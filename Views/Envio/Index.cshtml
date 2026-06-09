@@ -1,0 +1,38 @@
+﻿<partial name="_CheckoutSteps" model='"Envio"' />
+
+<h2>Datos de Envío</h2>
+
+<form asp-action="Continuar"
+      method="post">
+
+    <input type="hidden"
+           name="pedidoId"
+           value="@ViewBag.PedidoId" />
+
+    <div class="mb-3">
+        <label>Dirección</label>
+        <input class="form-control"
+               type="text"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Ciudad</label>
+        <input class="form-control"
+               type="text"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Código Postal</label>
+        <input class="form-control"
+               type="text"
+               required />
+    </div>
+
+    <button class="btn btn-success"
+            type="submit">
+        Continuar al Pago
+    </button>
+
+</form>
