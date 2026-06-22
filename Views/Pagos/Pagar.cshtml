@@ -1,107 +1,65 @@
 ﻿@model EcommerceImportados.Models.Pedido
 
-<h1>Pago</h1>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-2 fw-bold text-primary">Pago de Orden</h2>
+                    <p class="text-muted text-center small mb-4">Pedido #@Model.Id &bull; Total: <strong>$@Model.Total</strong></p>
 
-<hr />
+                    <form id="formPago">
+                        <input type="hidden" name="pedidoId" value="@Model.Id" />
 
-<h3>Pedido #@Model.Id</h3>
+                        <div class="d-flex justify-content-center gap-4 mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodoPago" id="debito" value="Debito" checked>
+                                <label class="form-check-label" for="debito">Tarjeta Débito</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodoPago" id="credito" value="Credito">
+                                <label class="form-check-label" for="credito">Tarjeta Crédito</label>
+                            </div>
+                        </div>
 
-<p>
-    <strong>Total:</strong>
-    $@Model.Total
-</p>
+                        <div class="mb-3">
+                            <label for="numeroTarjeta" class="form-label small fw-bold text-muted">Número de tarjeta</label>
+                            <div class="position-relative d-flex align-items-center">
+                                <input type="text" class="form-control pe-5" id="numeroTarjeta" name="numeroTarjeta" maxlength="19" required placeholder="0000 0000 0000 0000" />
+                                <img id="iconoTarjeta" src="" alt="" class="position-absolute end-0 me-3" style="display: none; width: 40px; z-index: 5;" />
+                            </div>
+                        </div>
 
-<form id="formPago">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Titular</label>
+                            <input type="text" class="form-control" name="titular" required placeholder="Nombre como figura en la tarjeta" />
+                        </div>
 
-    <input type="hidden"
-           name="pedidoId"
-           value="@Model.Id" />
+                        <div class="row">
+                            <div class="col-7 mb-3">
+                                <label for="vencimiento" class="form-label small fw-bold text-muted">Vencimiento</label>
+                                <input type="text" class="form-control" id="vencimiento" name="vencimiento" placeholder="MM/AA" maxlength="5" required />
+                            </div>
+                            <div class="col-5 mb-3">
+                                <label for="cvv" class="form-label small fw-bold text-muted">CVV</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="cvv" name="cvv" placeholder="###" maxlength="3" required />
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleCvv">👁</button>
+                                </div>
+                            </div>
+                        </div>
 
-    <div>
-        <label>
-            <input type="radio"
-                   name="metodoPago"
-                   value="Debito"
-                   checked />
-
-            Tarjeta Débito
-        </label>
-
-        <label>
-            <input type="radio"
-                   name="metodoPago"
-                   value="Credito" />
-
-            Tarjeta Crédito
-        </label>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">
+                                Confirmar Pago
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <br />
-
-    <div>
-        <label>Número de tarjeta</label>
-        <br />
-
-        <input type="text"
-               id="numeroTarjeta"
-               name="numeroTarjeta"
-               maxlength="19"
-               required />
-
-        <img id="iconoTarjeta"
-             src=""
-             alt=""
-             style="display: none; width: 45px; margin-left: 10px;" />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Titular</label>
-        <br />
-        <input type="text"
-               name="titular"
-               required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Vencimiento</label>
-        <br />
-        <input type="text"
-               maxlength="5"
-               id="vencimiento"
-               name="vencimiento"
-               placeholder="MM/AA"
-               required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>CVV</label>
-        <br />
-        <input type="password"
-               maxlength="3"
-               id="cvv"
-               name="cvv"
-               placeholder="###"
-               required />
-
-        <button type="button"
-                id="toggleCvv">
-            👁
-        </button>
-    </div>
-
-    <br />
-
-    <button type="submit">
-        Confirmar Pago
-    </button>
-
-</form>
+</div>
 
 @section Scripts {
     <script src="~/js/pagos.js"></script>
