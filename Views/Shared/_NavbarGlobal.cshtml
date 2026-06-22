@@ -46,8 +46,28 @@
         <!-- Admin  -->
         <div class="d-flex align-items-center">
 
-            @if (isAuthenticated){
-                <a asp-controller="Account" asp-action="Logout" class="gi-nav__logout">Cerrar sesión</a>
+
+            @if (User.Identity!.IsAuthenticated)
+{
+    <li class="nav-item">
+        <a class="nav-link"
+           asp-controller="Account"
+           asp-action="Index">
+            <i class="bi bi-person-circle"></i>
+        </a>
+    </li>
+}
+else
+            {
+                 <li class="nav-item">
+        <a class="nav-link"
+           asp-controller="Account"
+           asp-action="Index">
+            <i class="bi bi-person-circle"></i>
+            Iniciar Sesion
+        </a>
+    </li>
+                
             }
 
             @if (isAuthenticated)

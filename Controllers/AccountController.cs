@@ -173,4 +173,19 @@ public class AccountController : Controller
 
         return View(pedidos);
     }
+
+    [Authorize]
+    public IActionResult Index()
+    {
+        int usuarioId = int.Parse(
+            User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var usuario = _context.Usuarios
+            .FirstOrDefault(u => u.Id == usuarioId);
+
+        if (usuario == null)
+            return NotFound();
+
+        return View(usuario);
+    }
 }
