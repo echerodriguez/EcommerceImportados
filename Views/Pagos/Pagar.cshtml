@@ -1,6 +1,6 @@
 ﻿@model EcommerceImportados.Models.Pedido
 
-<h1>Pasarela de Pago</h1>
+<h1>Pago</h1>
 
 <hr />
 
@@ -41,23 +41,18 @@
     <div>
         <label>Número de tarjeta</label>
         <br />
+
         <input type="text"
-            id="numeroTarjeta"
+               id="numeroTarjeta"
                name="numeroTarjeta"
                maxlength="19"
                required />
-    </div>
 
-    <script>
-        document.getElementById("numeroTarjeta")
-        .addEventListener("input", function(e) {
-            let valor = e.target.value;
-            valor = valor.replace(/\D/g, '');
-            valor = valor.substring(0, 16);
-            valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
-            e.target.value = valor;
-        });
-    </script>
+        <img id="iconoTarjeta"
+             src=""
+             alt=""
+             style="display: none; width: 45px; margin-left: 10px;" />
+    </div>
 
     <br />
 
@@ -82,32 +77,16 @@
                required />
     </div>
 
-    <script>
-        document.getElementById("vencimiento")
-        .addEventListener("input", function(e) {
-            let valor = e.target.value;
-            valor = valor.replace(/\D/g, '');
-            valor = valor.substring(0, 4);
-            if (valor.length > 2)
-            {
-                valor =
-                    valor.substring(0,2)
-                    + "/"
-                    + valor.substring(2);
-            }
-            e.target.value = valor;
-        });
-    </script>
-
     <br />
 
     <div>
         <label>CVV</label>
         <br />
         <input type="password"
+               maxlength="3"
                id="cvv"
                name="cvv"
-               maxlength="3"
+               placeholder="###"
                required />
 
         <button type="button"
@@ -115,32 +94,6 @@
             👁
         </button>
     </div>
-
-    <script>
-        document.getElementById("cvv")
-        .addEventListener("input", function(e) {
-
-            e.target.value =
-                e.target.value
-                    .replace(/\D/g, '')
-                    .substring(0,3);
-        });
-        document.getElementById("toggleCvv")
-        .addEventListener("click", function() {
-
-            const cvv =
-                document.getElementById("cvv");
-
-            if (cvv.type === "password")
-            {
-                cvv.type = "text";
-            }
-            else
-            {
-                cvv.type = "password";
-            }
-        });
-    </script>
 
     <br />
 
@@ -150,39 +103,6 @@
 
 </form>
 
-<script>
-    document.getElementById("formPago")
-        .addEventListener("submit", async function (e) {
-
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            try {
-
-                const response = await fetch(
-                    "/Pagos/ConfirmarPago",
-                    {
-                        method: "POST",
-                        body: formData
-                    });
-
-                const resultado = await response.json();
-
-                if (resultado.success) {
-
-                    alert(resultado.mensaje);
-
-                    window.location.href = "/Home/Index";
-                }
-                else {
-
-                    alert(resultado.mensaje);
-                }
-
-            } catch (error) {
-
-                alert("Ocurrió un error al procesar el pago.");
-            }
-        });
-</script>
+@section Scripts {
+    <script src="~/js/pagos.js"></script>
+}

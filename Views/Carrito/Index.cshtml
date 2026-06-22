@@ -4,7 +4,7 @@
 @{
     decimal subtotalGeneral = Model.Sum(x =>
         x.PrecioUnitario * x.Cantidad);
-    decimal envio = 0; //subtotalGeneral > 0 ? 5000 : 0; Por si es necesario aumentarlo
+    decimal envio = 0; //subtotalGeneral > 0 ? 5000 : 0; HARDCODEADO EL ENVIO GRATIS
     decimal total = subtotalGeneral + envio;
 }
 
