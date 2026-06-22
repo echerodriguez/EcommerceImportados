@@ -19,10 +19,10 @@
             $@Model.Total
         </p>
 
-        @if (TempData["Error"] != null)
+        @if (TempData["ErrorEnvio"] != null)
         {
             <div class="alert alert-danger">
-                @TempData["Error"]
+                @TempData["ErrorEnvio"]
             </div>
         }
 
