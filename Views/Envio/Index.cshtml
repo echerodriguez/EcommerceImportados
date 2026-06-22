@@ -1,4 +1,108 @@
-﻿@page
-@model EcommerceImportados.Views.Envio.EnvioModel
+﻿@model EcommerceImportados.Models.Pedido
+
 @{
+    ViewData["Title"] = "Envío";
 }
+
+<partial name="_CheckoutSteps" model='"Envio"' />
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+
+        <h1>Datos de envío</h1>
+        <hr />
+
+        <h4>Pedido #@Model.Id</h4>
+
+        <p>
+            <strong>Total:</strong>
+            $@Model.Total
+        </p>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["Error"]
+            </div>
+        }
+
+        <form asp-controller="Envio"
+              asp-action="ConfirmarEnvio"
+              method="post">
+
+            <input type="hidden"
+                   name="pedidoId"
+                   value="@Model.Id" />
+
+            <div class="mb-3">
+                <label class="form-label">Nombre completo</label>
+                <input type="text"
+                       name="nombreCompleto"
+                       class="form-control"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="text"
+                       name="telefono"
+                       class="form-control"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       maxlength="15"
+                       oninput="this.value = this.value.replace(/\D/g, '')"
+                       required />
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Provincia</label>
+                    <input type="text"
+                           name="provincia"
+                           class="form-control"
+                           required />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Localidad</label>
+                    <input type="text"
+                           name="localidad"
+                           class="form-control"
+                           required />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Dirección</label>
+                <input type="text"
+                       name="direccion"
+                       class="form-control"
+                       placeholder="Calle, número, piso/depto"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Código postal</label>
+                <input type="text"
+                       name="codigoPostal"
+                       class="form-control"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Opcional"></textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success w-100">
+                Continuar al pago
+            </button>
+
+        </form>
+
+    </div>
+</div>

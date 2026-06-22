@@ -180,7 +180,7 @@ namespace EcommerceImportados.Controllers
             var pedido = new Pedido
             {
                 Fecha = DateTime.Now,
-                Estado = EstadoPedido.PendientePago,
+                Estado = EstadoPedido.PendienteDatosEnvio,
                 UsuarioId = usuarioId,
                 Activo = true
             };
@@ -208,8 +208,8 @@ namespace EcommerceImportados.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(
-                "Pagar",
-                "Pagos",
+                "Index",
+                "Envio",
                 new { pedidoId = pedido.Id });
         }
 
