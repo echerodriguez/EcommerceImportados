@@ -37,35 +37,45 @@
             Global Imports
         </a>
 
-        <!-- NAVBAR -->
-        <nav class="d-flex gap-4">
+        <nav class="d-flex align-items-center gap-4">
             <a asp-controller="Home" asp-action="Index" class="text-dark text-decoration-none small fw-semibold">Inicio</a>
-            <a asp-controller="Producto" asp-action="Index" class="text-dark text-decoration-none small fw-semibold border-bottom border-dark pb-1">Productos</a>
+            <a asp-controller="Producto" asp-action="Index" class="text-dark text-decoration-none small fw-semibold">Productos</a>
+
+            @if (User.IsInRole("RolAdministrador"))
+            {
+                <div class="d-flex flex-column align-items-start bg-light p-2 rounded border border-secondary border-opacity-25" style="margin-left: 0.5rem;">
+                    <span class="text-muted fw-bold text-uppercase mb-1 align-self-center" style="font-size: 0.65rem; letter-spacing: 0.05em;">Sección Administrador</span>
+                    <div class="d-flex gap-3">
+                        <a asp-controller="Categorias" asp-action="Index" class="text-dark text-decoration-none small fw-semibold text-primary-hover">Categorías</a>
+                        <a asp-controller="Producto" asp-action="Admin" class="text-dark text-decoration-none small fw-semibold text-primary-hover">Productos</a>
+                        
+                    </div>
+                </div>
+            }
         </nav>
 
-        <!-- Admin  -->
-        <div class="d-flex align-items-center">
-
-            @if (isAuthenticated){
-                <a asp-controller="Account" asp-action="Logout" class="gi-nav__logout">Cerrar sesión</a>
-            }
+        <div class="d-flex align-items-center gap-3">
 
             @if (isAuthenticated)
             {
                 <a asp-controller="Carrito"
                    asp-action="Index"
-                   class="carrito-link">
-                    🛒<span id="contadorCarrito">@cantidadCarrito</span>
+                   class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                   style="transition: all 0.2s ease;"
+                   title="Ver mi carrito">
+                    <span style="font-size: 0.9rem; line-height: 1;">🛒</span>
+                    <span>Carrito</span>
+                    <span class="badge bg-danger rounded-pill px-2" id="contadorCarrito">@cantidadCarrito</span>
                 </a>
             }
             else
             {
-                <a href="#"class="carrito-link"onclick="alert('Debe iniciar sesión para ver su carrito.');window.location.href='/Account/Login';return false;">🛒<span id="contadorCarrito">0</span></a>
+                <a href="#" class="carrito-link me-2" onclick="alert('Debe iniciar sesión para ver su carrito.');window.location.href='/Account/Login';return false;">🛒<span id="contadorCarrito">0</span></a>
             }
 
-            @if (User.IsInRole("RolAdministrador")){          
-            <a asp-controller="Categorias" asp-action="Index" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Cat</a>
-            <a asp-controller="Producto" asp-action="Admin" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase px-2 small fw-bold">Admin Prod</a>
+            @if (isAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Logout" class="gi-nav__logout btn btn-sm btn-outline-danger rounded-pill px-3 py-2 fw-semibold">Cerrar sesión</a>
             }
         </div>
     </div>
