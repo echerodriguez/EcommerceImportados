@@ -22,7 +22,7 @@ namespace EcommerceImportados.Controllers
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
-                TempData["Error"] =
+                TempData["ErrorCarrito"] =
                     "Debe iniciar sesión para ver su carrito.";
 
                 return RedirectToAction(
@@ -162,7 +162,7 @@ namespace EcommerceImportados.Controllers
 
             if (!detalles.Any())
             {
-                TempData["Error"] = "El carrito está vacío.";
+                TempData["ErrorCarrito"] = "El carrito está vacío.";
                 return RedirectToAction("Index");
             }
 
@@ -170,7 +170,7 @@ namespace EcommerceImportados.Controllers
             {
                 if (detalle.Cantidad > detalle.Producto.Stock)
                 {
-                    TempData["Error"] =
+                    TempData["ErrorCarrito"] =
                         $"No hay stock suficiente para {detalle.Producto.Nombre}";
 
                     return RedirectToAction("Index");
@@ -241,7 +241,7 @@ namespace EcommerceImportados.Controllers
 
             if (detalle.Cantidad + 1 > detalle.Producto.Stock)
             {
-                TempData["Error"] = "No hay stock suficiente.";
+                TempData["ErrorCarrito"] = "No hay stock suficiente.";
                 return RedirectToAction("Index");
             }
 

@@ -21,6 +21,13 @@
             <p>Tu carrito está vacío.</p>
         }
 
+        @if (TempData["ErrorCarrito"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorCarrito"]
+            </div>
+        }
+
         @foreach (var item in Model)
         {
             decimal itemSubtotal =
