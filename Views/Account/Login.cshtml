@@ -1,27 +1,43 @@
 ﻿@model EcommerceImportados.ViewModels.LoginViewModel
 
-<h2>Login</h2>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4 fw-bold text-primary">Iniciar Sesión</h2>
 
-<form asp-action="Login" method="post">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-    <input asp-for="Email" placeholder="Email" />
-    <span asp-validation-for="Email"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="nombre@correo.com" required />
+                            <label asp-for="Email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger small d-block mt-1"></span>
+                        </div>
 
-    <input asp-for="Password"
-           type="password"
-           placeholder="Contraseña" />
-    <span asp-validation-for="Password"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" required />
+                            <label asp-for="Password">Contraseña</label>
+                            <span asp-validation-for="Password" class="text-danger small d-block mt-1"></span>
+                        </div>
 
-    <button type="submit">
-        Ingresar
-    </button>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">
+                                Ingresar
+                            </button>
 
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-link btn-sm text-muted text-center mt-2">
+                                ¿No tenés cuenta? Registrate
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <br />
-    <br />
-
-    <a asp-controller="Account"
-       asp-action="Register">
-        ¿No tenés cuenta? Registrate
-    </a>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

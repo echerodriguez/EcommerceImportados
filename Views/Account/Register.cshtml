@@ -1,32 +1,66 @@
 ﻿@model EcommerceImportados.ViewModels.RegisterViewModel
 
-<h2>Registro</h2>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4 fw-bold text-primary">Crear Cuenta</h2>
 
-<form asp-action="Register" method="post">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-    <input asp-for="Nombre" placeholder="Nombre" />
-    <span asp-validation-for="Nombre"></span>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" required />
+                                    <label asp-for="Nombre">Nombre</label>
+                                    <span asp-validation-for="Nombre" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Apellido" class="form-control" placeholder="Apellido" required />
+                                    <label asp-for="Apellido">Apellido</label>
+                                    <span asp-validation-for="Apellido" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
 
-    <input asp-for="Apellido" placeholder="Apellido" />
-    <span asp-validation-for="Apellido"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="nombre@correo.com" required />
+                            <label asp-for="Email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger small d-block mt-1"></span>
+                        </div>
 
-    <input asp-for="Email" placeholder="Email" />
-    <span asp-validation-for="Email"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="DNI" class="form-control" placeholder="DNI" required />
+                            <label asp-for="DNI">DNI</label>
+                            <span asp-validation-for="DNI" class="text-danger small d-block mt-1"></span>
+                        </div>
 
-    <input asp-for="DNI" placeholder="DNI" />
-    <span asp-validation-for="DNI"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" required />
+                            <label asp-for="Password">Contraseña</label>
+                            <span asp-validation-for="Password" class="text-danger small d-block mt-1"></span>
+                        </div>
 
-    <input asp-for="Password" type="password" placeholder="Contraseña" />
-    <span asp-validation-for="Password"></span>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">
+                                Registrarse
+                            </button>
 
-    <button type="submit">Registrarse</button>
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-link btn-sm text-muted text-center mt-2">
+                                Ya tengo una cuenta
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <br />
-    <br />
-
-    <a asp-controller="Account"
-       asp-action="Login">
-        Ya tengo una cuenta
-    </a>
-
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
