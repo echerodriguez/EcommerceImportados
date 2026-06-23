@@ -2,6 +2,7 @@
 using EcommerceImportados.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerceImportados.Controllers;
 
@@ -30,6 +31,36 @@ public class PedidoController : Controller
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Index");
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Cancelar(int id)
+    {
+        int usuarioId = int.Parse(
+            User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var pedido = await _context.Pedidos.FindAsync(id);
+
+        if (pedido == null)
+            return NotFound();
+
+        if (pedido.UsuarioId != usuarioId)
+            return Forbid();
+
+        if (pedido.Estado == EstadoPedido.Pagado)
+        {
+            return RedirectToAction(
+                "HistorialCompras",
+                "Account");
+        }
+
+        pedido.Estado = EstadoPedido.Cancelado;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(
+            "HistorialCompras",
+            "Account");
     }
 
 
