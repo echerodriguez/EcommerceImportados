@@ -23,13 +23,3 @@
     Cerrar sesión
 </a>
 
-@if (User.IsInRole("RolAdministrador"))
-{
-    <hr />
-
-    <a asp-controller="Pedido"
-       asp-action="Index"
-       class="btn btn-warning">
-        Administrar pedidos
-    </a>
-}
