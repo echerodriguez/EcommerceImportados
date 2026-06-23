@@ -48,7 +48,6 @@
                     <div class="d-flex gap-3">
                         <a asp-controller="Categorias" asp-action="Index" class="text-dark text-decoration-none small fw-semibold text-primary-hover">Categorias</a>
                         <a asp-controller="Producto" asp-action="Admin" class="text-dark text-decoration-none small fw-semibold text-primary-hover">Productos</a>
-                        
                     </div>
                 </div>
             }
@@ -58,6 +57,16 @@
 
             @if (isAuthenticated)
             {
+
+                <a asp-controller="Account"
+                   asp-action="Index"
+                   class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                   style="transition: all 0.2s ease;"
+                   title="Mi Perfil">
+                    <span style="font-size: 0.9rem; line-height: 1;">👤</span>
+                    <span>Cuenta</span>
+                </a>
+
                 <a asp-controller="Carrito"
                    asp-action="Index"
                    class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
@@ -70,7 +79,13 @@
             }
             else
             {
-                <a href="#" class="carrito-link me-2" onclick="alert('Debe iniciar sesión para ver su carrito.');window.location.href='/Account/Login';return false;">🛒<span id="contadorCarrito">0</span></a>
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                   title="Iniciar Sesión">
+                    <span style="font-size: 0.95rem; line-height: 1;">🔑</span>
+                    <span>Ingresar</span>
+                </a>
             }
 
             @if (isAuthenticated)
