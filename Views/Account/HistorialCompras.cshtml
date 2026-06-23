@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EcommerceImportados.Models.Pedido>
+﻿@using EcommerceImportados.Models
+@model IEnumerable<EcommerceImportados.Models.Pedido>
 
 <h2>Mis Compras</h2>
 
@@ -9,6 +10,7 @@
             <th>Fecha</th>
             <th>Total</th>
             <th>Estado</th>
+            <th>Acciones</th>
         </tr>
     </thead>
 
@@ -20,6 +22,40 @@
                 <td>@pedido.Fecha</td>
                 <td>$@pedido.Total</td>
                 <td>@pedido.Estado</td>
+                <td>
+                    @if (pedido.Estado == EstadoPedido.PendienteDatosEnvio)
+                    {
+                        <a asp-controller="Envio"
+                           asp-action="Index"
+                           asp-route-pedidoId="@pedido.Id"
+                           class="btn btn-primary btn-sm">
+                            Continuar pedido
+                        </a>
+
+                        <a asp-controller="Pedido"
+                           asp-action="Cancelar"
+                           asp-route-id="@pedido.Id"
+                           class="btn btn-danger btn-sm">
+                            Cancelar pedido
+                        </a>
+                    }
+                    else if (pedido.Estado == EstadoPedido.PendientePago)
+                    {
+                        <a asp-controller="Pagos"
+                           asp-action="Pagar"
+                           asp-route-pedidoId="@pedido.Id"
+                           class="btn btn-success btn-sm">
+                            Continuar pedido
+                        </a>
+
+                        <a asp-controller="Pedido"
+                           asp-action="Cancelar"
+                           asp-route-id="@pedido.Id"
+                           class="btn btn-danger btn-sm">
+                            Cancelar pedido
+                        </a>
+                    }
+                </td>
             </tr>
         }
     </tbody>
